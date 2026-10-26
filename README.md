@@ -1,6 +1,6 @@
-# 電商智慧客服與評價分析系統 (AI-Platform-Final)
+# 電商智慧客服與評價分析系統 (AI-Platform-Midterm)
 
-本專案為 AI 期末專案，在 WSL2 環境下使用 Python (`uv`) 呼叫本地 Ollama (`qwen2.5` 與 `nomic-embed-text`)，打造一個具備商業實務應用的電商智慧客服系統。
+本專案為 AI 期中專案，在 WSL2 環境下使用 Python (`uv`) 呼叫本地 Ollama (`qwen2.5` 與 `nomic-embed-text`)，打造一個具備商業實務應用的電商智慧客服系統。
 
 ---
 
