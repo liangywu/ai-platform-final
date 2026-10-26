@@ -3,47 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 小專案成果報告</title>
+    <title>電商智慧客服與評價分析系統 - AI 期末專案成果</title>
     <style>
         body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; color: #333; }
-        h1 { color: #333; border-bottom: 2px solid #666; padding-bottom: 10px; }
-        h2 { color: #444; margin-top: 30px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
         code { background: #eee; padding: 2px 5px; border-radius: 4px; }
         pre { background: #2d2d2d; color: #ccc; padding: 15px; border-radius: 6px; overflow-x: auto; }
+        ul { padding-left: 20px; }
     </style>
 </head>
 <body>
-    <h1>AI 小專案成果報告</h1>
+    <h1>電商智慧客服與評價分析系統</h1>
+    <p><b>專案主題：</b>基於本地大語言模型的智慧客服自動化與評價分析解決方案</p>
     
     <div class="card">
         <h2>1. 專案介紹 (做了什麼)</h2>
-        <p>本專案使用 Python (`uv`) 呼叫本地 Ollama (`qwen2.5` 與 `nomic-embed-text`)，在 WSL2 環境下完整實作了四種核心 AI 能力：</p>
+        <p>本專案在 WSL2 環境下使用 Python (`uv`) 呼叫本地 Ollama (`qwen2.5` 與 `nomic-embed-text`)，打造一個具備商業實務應用的電商智慧客服系統，涵蓋四大核心模組：</p>
         <ul>
-            <li><b>串流輸出 (Streaming):</b> 即時逐字生成回應。</li>
-            <li><b>結構化輸出 (Structured Output):</b> 強制模型輸出指定 JSON Schema 格式。</li>
-            <li><b>工具呼叫 (Tool Calling):</b> 讓 AI 自主識別並呼叫自定義 Python 函式。</li>
-            <li><b>Embedding 嵌入向量:</b> 將文字轉換為高維度向量特徵。</li>
+            <li><b>串流輸出 (Streaming):</b> 模擬智慧客服即時打字回覆顧客的退換貨等諮詢。</li>
+            <li><b>結構化輸出 (Structured Output):</b> 自動分析顧客評論，將滿意度、問題分類與處理優先級提取為標準 JSON 格式。</li>
+            <li><b>工具呼叫 (Tool Calling):</b> 整合客服後台的折扣計算工具，精確計算優惠價格並由 AI 回應。</li>
+            <li><b>Embedding 嵌入向量:</b> 進行 FAQ 知識庫與顧客提問的語意相似度檢索準備。</li>
         </ul>
     </div>
 
     <div class="card">
         <h2>2. 執行步驟 (怎麼執行)</h2>
-        <pre><code># 確保 Ollama 服務已啟動並下載對應模型
+        <pre><code># 1. 確保 Ollama 服務已啟動並下載模型
 ollama run qwen2.5
+ollama run nomic-embed-text
 
-# 透過 uv 執行主程式
+# 2. 透過 uv 在終端機執行主程式
 uv run main.py</code></pre>
     </div>
 
     <div class="card">
         <h2>3. 執行結果</h2>
-        <p>程式能正確執行並依序展示四大功能：終端機能順利輸出串流文字、將評論解析為標準 JSON、自動運算數學工具函數，以及成功產出嵌入向量長度與數值。</p>
+        <p>程式能流暢地運行四大情境：終端機即時印出客服逐字回覆串流、完美解析出顧客評價的 JSON 結構、自動運算折扣金額，以及成功產生 FAQ 嵌入向量特徵，完全符合電商自動化客服的需求。</p>
     </div>
 
     <div class="card">
         <h2>4. AI 使用說明與環境</h2>
-        <p>開發過程中使用系統提示詞引導 Ollama 進行邏輯與格式控制，並透過 Dockerfile 進行容器化封裝，確保環境一致性。</p>
+        <p>開發過程中運用 Ollama 本地模型進行提示詞工程與格式約束，未涉及任何雲端 API 金鑰（符合 `.env` 資安規範）。並透過附帶的 <code>Dockerfile</code> 進行容器化封裝，確保跨環境的一致性與可攜性。</p>
     </div>
 </body>
 </html>
