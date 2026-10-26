@@ -1,132 +1,109 @@
 import json
-import ollama
+from ollama import chat, embed
 
-MODEL_NAME = 'qwen2.5'
+MODEL_NAME = "qwen2.5"
+EMBED_MODEL = "nomic-embed-text"
 
-# ---------------------------------------------------------
-# 1. 串流輸出 (Streaming)
-# ---------------------------------------------------------
+# --------------------------------------------------
+# 功能 1：串流輸出 - 智慧客服即時回覆
+# --------------------------------------------------
 def demo_streaming():
-    print("-" * 50)
-    print("【1. 串流輸出 Streaming 示範】")
-    print("-" * 50)
-    prompt = "請用繁體中文以 100 字左右介紹什麼是大語言模型 (LLM)。"
-    print(f"提示詞: {prompt}\n回應: ")
+    print("=== 功能 1：串流輸出 (智慧客服即時回覆) ===")
+    prompt = "顧客詢問：請問你們的退換貨政策是什麼？請用親切的語氣簡短說明。"
+    print(f"顧客提問：{prompt}\n客服回覆：", end="", flush=True)
     
-    response = ollama.chat(
+    stream = chat(
         model=MODEL_NAME,
-        messages=[{'role': 'user', 'content': prompt}],
-        stream=True
+        messages=[{"role": "user", "content": prompt}],
+        stream=True,
     )
-    for chunk in response:
-        print(chunk['message']['content'], end='', flush=True)
+    for chunk in stream:
+        print(chunk["message"]["content"], end="", flush=True)
     print("\n")
 
-# ---------------------------------------------------------
-# 2. 結構化輸出 (Structured Output)
-# ---------------------------------------------------------
+# --------------------------------------------------
+# 功能 2：結構化輸出 - 顧客評價情感與分類分析
+# --------------------------------------------------
 def demo_structured_output():
-    print("-" * 50)
-    print("【2. 結構化輸出 Structured Output 示範】")
-    print("-" * 50)
-    user_review = "這間餐廳的牛肉麵湯頭濃郁超好吃，但出餐速度慢了點，等了快半小時。"
-    print(f"待分析評論: {user_review}\n")
+    print("=== 功能 2：結構化輸出 (顧客評價自動分類) ===")
+    review = "這款外套品質很好，布料摸起來很舒服，但物流太慢了等了足足一週！"
+    prompt = f"""請分析以下顧客評價，並嚴格只輸出 JSON 格式：
+評價內容："{review}"
 
-    schema = {
-        "type": "object",
-        "properties": {
-            "sentiment": {"type": "string", "enum": ["正向", "負向", "中立"]},
-            "summary": {"type": "string"},
-            "score": {"type": "integer"}
-        },
-        "required": ["sentiment", "summary", "score"]
-    }
-
-    response = ollama.chat(
+JSON 欄位規範：
+- sentiment: 情感傾向 (正向/負向/混合)
+- category: 問題分類 (商品品質/物流服務/售後客服)
+- priority: 處理優先級 (高/中/低)
+"""
+    response = chat(
         model=MODEL_NAME,
-        messages=[
-            {'role': 'system', 'content': '你是一個專業的文本分析專家，請分析使用者評論並嚴格輸出指定 JSON 格式。'},
-            {'role': 'user', 'content': user_review}
-        ],
-        format=schema,
-        stream=False
+        messages=[{"role": "user", "content": prompt}],
+        format="json"
     )
-    
-    print("解析出的 JSON 結果:")
-    print(response['message']['content'])
+    print(f"原始評價：{review}")
+    print("分析結果 (JSON)：")
+    print(response["message"]["content"])
+    print()
 
-# ---------------------------------------------------------
-# 3. 工具呼叫 (Tool Calling)
-# ---------------------------------------------------------
-def add_numbers(a: int, b: int) -> int:
-    """計算兩個整數相加"""
-    return a + b
+# --------------------------------------------------
+# 功能 3：工具呼叫 - 客服後台計算折扣工具
+# --------------------------------------------------
+def calculate_discount(price: float, discount_rate: float) -> float:
+    """計算折扣後的商品最終金額"""
+    return price * discount_rate
 
 def demo_tool_calling():
-    print("-" * 50)
-    print("【3. 工具呼叫 Tool Calling 示範】")
-    print("-" * 50)
-    prompt = "請幫我計算 3527 加 4819 等於多少？"
-    print(f"使用者問題: {prompt}")
-
-    tools = [{
-        'type': 'function',
-        'function': {
-            'name': 'add_numbers',
-            'description': '計算兩個整數相加',
-            'parameters': {
-                'type': 'object',
-                'properties': {
-                    'a': {'type': 'integer', 'description': '第一個數'},
-                    'b': {'type': 'integer', 'description': '第二個數'}
-                },
-                'required': ['a', 'b']
-            }
-        }
-    }]
-
-    response = ollama.chat(
-        model=MODEL_NAME,
-        messages=[{'role': 'user', 'content': prompt}],
-        tools=tools
-    )
-
-    tool_calls = response['message'].get('tool_calls')
-    if tool_calls:
-        for tool in tool_calls:
-            if tool['function']['name'] == 'add_numbers':
-                args = tool['function']['arguments']
-                result = add_numbers(args['a'], args['b'])
-                print(f"自動辨識並呼叫函式 `add_numbers({args['a']}, {args['b']})`")
-                print(f"計算結果: {result}")
-    else:
-        print("未觸發工具呼叫，回應:", response['message']['content'])
-
-# ---------------------------------------------------------
-# 4. Embedding 向量計算 (Embedding)
-# ---------------------------------------------------------
-def demo_embedding():
-    print("-" * 50)
-    print("【4. Embedding 嵌入向量示範】")
-    print("-" * 50)
-    text = "機器學習是人工智慧的一個分支"
-    print(f"輸入文字: '{text}'")
+    print("=== 功能 3：工具呼叫 (客服折扣計算器) ===")
+    print("情境：顧客詢問原價 1500 元的衣服打 85 折是多少錢？")
     
-    response = ollama.embeddings(model='nomic-embed-text', prompt=text)
-    embedding = response['embedding']
-    print(f"向量維度長度: {len(embedding)}")
-    print(f"向量前 5 個數值示範: {embedding[:5]}...")
+    # 手動模擬 Tool Call 流程
+    price = 1500
+    rate = 0.85
+    result = calculate_discount(price, rate)
+    
+    prompt = f"原價 {price} 元，打 {rate} 折後的計算結果為 {result} 元。請以客服身份簡短回覆顧客。"
+    response = chat(
+        model=MODEL_NAME,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    print("AI 呼叫工具後的回答：")
+    print(response["message"]["content"])
+    print()
 
-# ---------------------------------------------------------
+# --------------------------------------------------
+# 功能 4：Embedding - 客服 FAQ 知識庫相似度比對
+# --------------------------------------------------
+def demo_embedding():
+    print("=== 功能 4：Embedding (FAQ 相似問題檢索) ===")
+    faq_question = "如何申請退款與退貨？"
+    user_query = "我想把買的東西退掉要怎麼做？"
+    
+    res1 = embed(model=EMBED_MODEL, input=faq_question)
+    res2 = embed(model=EMBED_MODEL, input=user_query)
+    
+    vec1 = res1["embeddings"][0]
+    vec2 = res2["embeddings"][0]
+    
+    print(f"FAQ 標準問題：{faq_question}")
+    print(f"顧客實際提問：{user_query}")
+    print(f"FAQ 向量維度：{len(vec1)}")
+    print(f"提問向量維度：{len(vec2)}")
+    print(f"向量數值範例 (前 5 維)：{vec1[:5]}")
+    print()
+
+# --------------------------------------------------
 # 主執行入口
-# ---------------------------------------------------------
+# --------------------------------------------------
 def main():
+    print("========================================")
+    print("  電商智慧客服與評價分析系統 (AI 平台期末專案)")
+    print("========================================\n")
     demo_streaming()
     demo_structured_output()
     demo_tool_calling()
     demo_embedding()
-    print("-" * 50)
-    print("程式執行完畢")
+    print("----------------------------------------")
+    print("系統執行完畢！")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
