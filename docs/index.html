@@ -12,6 +12,9 @@
         code { background: #eee; padding: 2px 5px; border-radius: 4px; }
         pre { background: #2d2d2d; color: #ccc; padding: 15px; border-radius: 6px; overflow-x: auto; }
         ul { padding-left: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f2f2f2; }
     </style>
 </head>
 <body>
@@ -47,6 +50,32 @@ uv run main.py</code></pre>
     <div class="card">
         <h2>4. AI 使用說明與環境</h2>
         <p>開發過程中運用 Ollama 本地模型進行提示詞工程與格式約束，未涉及任何雲端 API 金鑰（符合 `.env` 資安規範）。並透過附帶的 <code>Dockerfile</code> 進行容器化封裝，確保跨環境的一致性與可攜性。</p>
+    </div>
+
+    <div class="card">
+        <h2>5. 加分項目：本地模型 (Ollama) vs 雲端 API 比較表</h2>
+        <table>
+            <tr>
+                <th>比較維度</th>
+                <th>本地端 (Ollama / 本專案)</th>
+                <th>雲端 API (如 OpenAI GPT)</th>
+            </tr>
+            <tr>
+                <td><b>資安與隱私</b></td>
+                <td>資料不出門，完全在本地執行，無外洩風險。</td>
+                <td>資料需傳輸至第三方伺服器，具隱私考量。</td>
+            </tr>
+            <tr>
+                <td><b>執行成本</b></td>
+                <td>免費，僅需消耗自身硬體資源。</td>
+                <td>依 Token 計費，長期使用成本較高。</td>
+            </tr>
+            <tr>
+                <td><b>網路依賴</b></td>
+                <td>可完全離線運作。</td>
+                <td>強烈依賴穩定網路。</td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>
