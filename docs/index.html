@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 小專案成果報告</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; color: #333; }
+        h1 { color: #333; border-bottom: 2px solid #666; padding-bottom: 10px; }
+        h2 { color: #444; margin-top: 30px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        code { background: #eee; padding: 2px 5px; border-radius: 4px; }
+        pre { background: #2d2d2d; color: #ccc; padding: 15px; border-radius: 6px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>AI 小專案成果報告</h1>
+    
+    <div class="card">
+        <h2>1. 專案介紹 (做了什麼)</h2>
+        <p>本專案使用 Python (`uv`) 呼叫本地 Ollama (`qwen2.5` 與 `nomic-embed-text`)，在 WSL2 環境下完整實作了四種核心 AI 能力：</p>
+        <ul>
+            <li><b>串流輸出 (Streaming):</b> 即時逐字生成回應。</li>
+            <li><b>結構化輸出 (Structured Output):</b> 強制模型輸出指定 JSON Schema 格式。</li>
+            <li><b>工具呼叫 (Tool Calling):</b> 讓 AI 自主識別並呼叫自定義 Python 函式。</li>
+            <li><b>Embedding 嵌入向量:</b> 將文字轉換為高維度向量特徵。</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>2. 執行步驟 (怎麼執行)</h2>
+        <pre><code># 確保 Ollama 服務已啟動並下載對應模型
+ollama run qwen2.5
+
+# 透過 uv 執行主程式
+uv run main.py</code></pre>
+    </div>
+
+    <div class="card">
+        <h2>3. 執行結果</h2>
+        <p>程式能正確執行並依序展示四大功能：終端機能順利輸出串流文字、將評論解析為標準 JSON、自動運算數學工具函數，以及成功產出嵌入向量長度與數值。</p>
+    </div>
+
+    <div class="card">
+        <h2>4. AI 使用說明與環境</h2>
+        <p>開發過程中使用系統提示詞引導 Ollama 進行邏輯與格式控制，並透過 Dockerfile 進行容器化封裝，確保環境一致性。</p>
+    </div>
+</body>
+</html>

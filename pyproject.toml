@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "ollama>=0.6.3",
+    "openai>=3.37.0",
+    "python-dotenv>=1.2.4",
+]
 
 [project.scripts]
 ai-platform-final = "ai_platform_final:main"
